@@ -22,10 +22,9 @@ func BrakeFormat(format string) *list.List {
 	numbers := "0123456789"
 	types := "uirbfcs"
 	length := len(format)
-	fmt.Println(format, length)
+	//fmt.Println(format, length)
 	for i := 0; i < length; {
 		j := i
-		//fmt.Println("--", format[j:j+1], strings.Index(types, format[j:j+1]))
 		for (j+1 < length) && (strings.Index(types, format[j:j+1]) == -1) {
 			j++
 		}
@@ -33,14 +32,17 @@ func BrakeFormat(format string) *list.List {
 			j++
 		}
 		j++
-		fmt.Println("--", i, j, "=", format[i:j])
+		//fmt.Println("--", i, j, "=", format[i:j])
 		result.PushBack(format[i:j])
 		i = j
 	}
 	// print result.
-	for e := result.Front(); e != nil; e = e.Next() {
-		fmt.Println(e.Value, " ")
-	}
+	/*
+		for e := result.Front(); e != nil; e = e.Next() {
+			fmt.Print(e.Value, " ")
+		}
+	*/
+	//fmt.Println()
 	return result
 }
 
@@ -83,11 +85,12 @@ func CheckFormat(flist *list.List) bool {
 func ParseArgList() *[]list.List {
 	argv := os.Args[1:]
 	if len(argv) == 0 {
-		// no arguments.
+		fmt.Println("No command line arguments.")
+		return nil
 	} else {
 		format := argv[0]
 		flist := BrakeFormat(format)
-		fmt.Printf("%v%s", flist, "\n")
+		fmt.Println(flist)
 	}
 	return nil
 }
