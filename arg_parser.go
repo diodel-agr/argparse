@@ -7,6 +7,13 @@ import (
 	"strings"
 )
 
+func PrintList(l *list.List) {
+	for e := l.Front(); e != nil; e = e.Next() {
+		fmt.Print(e.Value, " ")
+	}
+	fmt.Println()
+}
+
 /*
 * BrakeFormat - function used to brake the format string into a list of formats.
 * @fmt: the format.
@@ -19,8 +26,8 @@ import (
  */
 func BrakeFormat(format string) *list.List {
 	result := list.New()
-	numbers := "0123456789"
-	types := "uirbfcs"
+	numbers := "0123456789y"
+	types := "irbfcs"
 	length := len(format)
 	//fmt.Println(format, length)
 	for i := 0; i < length; {
@@ -28,7 +35,7 @@ func BrakeFormat(format string) *list.List {
 		for (j+1 < length) && (strings.Index(types, format[j:j+1]) == -1) {
 			j++
 		}
-		for (j+2 < length) && (strings.Index(numbers, format[j+1:j+2]) != -1) {
+		for (j+1 < length) && (strings.Index(numbers, format[j+1:j+2]) != -1) {
 			j++
 		}
 		j++
@@ -41,8 +48,8 @@ func BrakeFormat(format string) *list.List {
 		for e := result.Front(); e != nil; e = e.Next() {
 			fmt.Print(e.Value, " ")
 		}
+		fmt.Println()
 	*/
-	//fmt.Println()
 	return result
 }
 
