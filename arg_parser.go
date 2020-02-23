@@ -45,6 +45,7 @@ func BrakeFormat(format string) *list.List {
 // CheckFormat - function used to check if the format given is valid.
 // @fmt: the format.
 // @return: true if the format is valid, false otherwise.
+// The types from the @flist argument has to be valid types.
 // Example: []i[]i is not valid because the program will not know when one array ends and the other begins.
 func CheckFormat(flist *list.List) bool {
 	/*
