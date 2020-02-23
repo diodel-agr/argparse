@@ -23,7 +23,7 @@ func CompareLists(a, b *list.List) bool {
 }
 
 /* iisf -> [i, i, s, f ] */
-func test_BrakeFormat01(l *list.List) bool {
+func testBrakeFormat01(l *list.List) bool {
 	expected := list.New()
 	expected.PushBack("i")
 	expected.PushBack("i")
@@ -33,7 +33,7 @@ func test_BrakeFormat01(l *list.List) bool {
 }
 
 /* []isi32[]10f */
-func test_BrakeFormat02(l *list.List) bool {
+func testBrakeFormat02(l *list.List) bool {
 	expected := list.New()
 	expected.PushBack("[]i")
 	expected.PushBack("s")
@@ -43,7 +43,7 @@ func test_BrakeFormat02(l *list.List) bool {
 }
 
 /* []ibyrc32s[]10byi */
-func test_BrakeFormat03(l *list.List) bool {
+func testBrakeFormat03(l *list.List) bool {
 	expected := list.New()
 	expected.PushBack("[]i")
 	expected.PushBack("by")
@@ -56,10 +56,35 @@ func test_BrakeFormat03(l *list.List) bool {
 }
 
 /* byui -> [by, ui] */
-func test_BrakeFormat04(l *list.List) bool {
+func testBrakeFormat04(l *list.List) bool {
 	expected := list.New()
 	expected.PushBack("by")
 	expected.PushBack("ui")
+	return CompareLists(l, expected)
+}
+
+/* i8i16i32i64ui8ui16ui32ui64iuirbyf32f64c32c64bs ->
+   [i8, i16, i32, i64, ui8, ui16, ui32, ui64, i, ui, r, by, f32, f64, c32, c64, b, s] */
+func testBrakeFormat05(l *list.List) bool {
+	expected := list.New()
+	expected.PushBack("i8")
+	expected.PushBack("i16")
+	expected.PushBack("i32")
+	expected.PushBack("i64")
+	expected.PushBack("ui8")
+	expected.PushBack("ui16")
+	expected.PushBack("ui32")
+	expected.PushBack("ui64")
+	expected.PushBack("i")
+	expected.PushBack("ui")
+	expected.PushBack("r")
+	expected.PushBack("by")
+	expected.PushBack("f32")
+	expected.PushBack("f64")
+	expected.PushBack("c32")
+	expected.PushBack("c64")
+	expected.PushBack("b")
+	expected.PushBack("s")
 	return CompareLists(l, expected)
 }
 
@@ -67,7 +92,7 @@ func TestBrakeFormat(t *testing.T) {
 	fmt.Println("TestBrakeFormat test function.")
 	/* iisf -> [i, i, s, f ] */
 	result := BrakeFormat("iisf")
-	if test_BrakeFormat01(result) == false {
+	if testBrakeFormat01(result) == false {
 		PrintList(result)
 		t.Errorf("Invalid TestBrakeFormat %s", "iisf")
 	} else {
@@ -75,7 +100,7 @@ func TestBrakeFormat(t *testing.T) {
 	}
 	/* []isi32[]10f -> [ []i, s, i32, []10f ] */
 	result = BrakeFormat("[]isi32[]10f")
-	if test_BrakeFormat02(result) == false {
+	if testBrakeFormat02(result) == false {
 		PrintList(result)
 		t.Errorf("Invalid TestBrakeFormat %s", "[]isi32[]10f")
 	} else {
@@ -83,18 +108,27 @@ func TestBrakeFormat(t *testing.T) {
 	}
 	/* []ibyrc32s[]10byi */
 	result = BrakeFormat("[]ibyrc32s[]10byi")
-	if test_BrakeFormat03(result) == false {
+	if testBrakeFormat03(result) == false {
 		PrintList(result)
 		t.Errorf("Invalid TestBrakeFormat %s.", "[]ibyrc32s[]10byi")
 	} else {
 		fmt.Println("Test []ibyrc32s[]10byi OK.")
 	}
-	/**/
+	/* byui -> [by, ui] */
 	result = BrakeFormat("byui")
-	if test_BrakeFormat04(result) == false {
+	if testBrakeFormat04(result) == false {
 		PrintList(result)
 		t.Errorf("Invalid TestBrakeFormat %s.", "byui")
 	} else {
 		fmt.Println("Test byui OK.")
+	}
+	/* i8i16i32i64ui8ui16ui32ui64iuirbyf32f64c32c64bs ->
+	   [i8, i16, i32, i64, ui8, ui16, ui32, ui64, i, ui, r, by, f32, f64, c32, c64, b, s] */
+	result = BrakeFormat("i8i16i32i64ui8ui16ui32ui64iuirbyf32f64c32c64bs")
+	if testBrakeFormat05(result) == false {
+		PrintList(result)
+		t.Errorf("Invalid TestBrakeFormat %s.", "i8i16i32i64ui8ui16ui32ui64iuirbyf32f64c32c64bs")
+	} else {
+		fmt.Println("Test i8i16i32i64ui8ui16ui32ui64iuirbyf32f64c32c64bs OK.")
 	}
 }
