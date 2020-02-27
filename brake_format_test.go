@@ -99,7 +99,7 @@ func testBrakeFormat06(l *list.List) bool {
 }
 
 func TestBrakeFormat(t *testing.T) {
-	fmt.Println("\nTestBrakeFormat test function.")
+	fmt.Println("\n=== BrakeFormat ===")
 	/* iisf -> [i, i, s, f ] */
 	result := BrakeFormat("iisf")
 	if testBrakeFormat01(result) == false {

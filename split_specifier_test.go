@@ -128,7 +128,7 @@ func testSplitSpec10(l *list.List) bool {
 }
 
 func TestSplitSpecifier(t *testing.T) {
-	fmt.Println("\nTestSplitSpecifier test function.")
+	fmt.Println("\n=== SplitSpecifier ===")
 	/* i -> ["" "" "" i "" ] */
 	result := SplitSpecifier("i")
 	if testSplitSpec0(result) == false {
