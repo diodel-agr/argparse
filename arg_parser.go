@@ -15,6 +15,14 @@ func PrintList(l *list.List) {
 	fmt.Println()
 }
 
+// GetSpec - function used to return the string or the "-". Useful for the SplitSpecifier function.
+func GetSpec(s string) string {
+	if s == "" {
+		return "-"
+	}
+	return s
+}
+
 // BrakeFormat - function used to brake the format string into a list of formats.
 // @fmt: the format.
 // @return: list of strings representing the types.
@@ -42,26 +50,26 @@ func BrakeFormat(format string) *list.List {
 	return result
 }
 
-// SplitType - function used to split a type into its elements.
-// A type has the following general format: []ntx where,
+// SplitSpecifier - function used to split a specifier into its elements.
+// A specifier has the following general format: []n*tx where,
 // [] specifies whether the type is a slice or not.
 // n is the slice size.
+// * specifies if it is a pointer type.
 // t is the type.
 // x is the type size in bits.
 //
 // [] n * t x
 // a  b c d e
-func SplitType(t string) (string, string, string, string, string) {
-	letters := "abcdefghijklmnopqrstuvwxyz" // "uirbfcs"
-	a, b, c, d, e := 0, 0, 0, 0, 0
-	i := 0
+func SplitSpecifier(t string) *list.List {
+	letters := "abcdefghijklmnopqrstuvwxyz*" // "uirbfcs"
+	a, b, c, d, e := 0, 0, 0, 0, 0           // the index of the specifier elements.
 	j := 0
 	length := len(t)
 	/* check if it is array. */
 	for j < length && ((t[j] == ']') || (t[j] == '[')) {
 		j++
 	}
-	if i != j {
+	if j != a {
 		b, c, d, e = j, j, j, j // j now points to the index of the array size.
 	}
 	/* find array size */
@@ -82,18 +90,26 @@ func SplitType(t string) (string, string, string, string, string) {
 	for j < length && strings.Index(letters, t[j:j+1]) != -1 {
 		j++
 	}
-	if j != c {
-		d = j // j now points to the bits size.
+	if j != d {
+		e = j // j now points to the bits size.
 	}
+	/* print index. */
+	//fmt.Println(a, b, c, d, e)
 	slice := t[a:b]
 	sliceSize := t[b:c]
 	pointerType := t[c:d]
 	theType := t[d:e]
 	bitSize := t[e:]
 	/* print result. */
-	fmt.Println("input:", t, " ->", slice, " ", sliceSize, " ", pointerType, " ", theType, " ", bitSize)
+	//fmt.Println("input:", t, " ->", GetSpec(slice), " ", GetSpec(sliceSize), " ", GetSpec(pointerType), " ", GetSpec(theType), " ", GetSpec(bitSize))
 	/* return result. */
-	return slice, sliceSize, pointerType, theType, bitSize
+	result := list.New()
+	result.PushBack(slice)
+	result.PushBack(sliceSize)
+	result.PushBack(pointerType)
+	result.PushBack(theType)
+	result.PushBack(bitSize)
+	return result
 }
 
 // CheckFormat - function used to check if the format given is valid.
@@ -141,7 +157,7 @@ func ParseArgList() *list.List {
 		flist := BrakeFormat(format)
 		PrintList(flist)
 		for l := flist.Front(); l != nil; l = l.Next() {
-			SplitType(l.Value.(string))
+			SplitSpecifier(l.Value.(string))
 		}
 	}
 	return nil
