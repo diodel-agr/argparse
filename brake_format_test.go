@@ -88,6 +88,16 @@ func testBrakeFormat05(l *list.List) bool {
 	return CompareLists(l, expected)
 }
 
+/* *i*ui[]*f[]10*ui -> [*i, []*f, []10*ui] */
+func testBrakeFormat06(l *list.List) bool {
+	expected := list.New()
+	expected.PushBack("*i")
+	expected.PushBack("*ui")
+	expected.PushBack("[]*f")
+	expected.PushBack("[]10*ui")
+	return CompareLists(l, expected)
+}
+
 func TestBrakeFormat(t *testing.T) {
 	fmt.Println("TestBrakeFormat test function.")
 	/* iisf -> [i, i, s, f ] */
@@ -130,5 +140,13 @@ func TestBrakeFormat(t *testing.T) {
 		t.Errorf("Invalid TestBrakeFormat %s.", "i8i16i32i64ui8ui16ui32ui64iuirbyf32f64c32c64bs")
 	} else {
 		fmt.Println("Test i8i16i32i64ui8ui16ui32ui64iuirbyf32f64c32c64bs OK.")
+	}
+	/* *i*ui[]*f[]10*ui -> [*i, []*f, []10*ui] */
+	result = BrakeFormat("*i*ui[]*f[]10*ui")
+	if testBrakeFormat06(result) == false {
+		PrintList(result)
+		t.Errorf("Invalid TestBrakeFormat %s.", "*i*ui[]*f[]10*ui")
+	} else {
+		fmt.Println("Test *i*ui[]*f[]10*ui OK.")
 	}
 }
