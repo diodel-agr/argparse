@@ -86,7 +86,7 @@ func checkTypeBitSize(t, bs string) (bool, string) {
 	return true, ""
 }
 
-// CheckSpecifier - function used to cerify if the elements of a specifier are valid.
+// CheckSpecifier - function used to verify if the elements of a specifier are valid.
 // There are several rules:
 // - the array specifier ( [] ) cannot be written like "[" or "]" or "][" or any other form.
 // - the slice size has to be positive integer. Negative or real numbers are not permitted.

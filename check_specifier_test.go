@@ -6,11 +6,10 @@ import (
 )
 
 func TestCheckSpecifier(t *testing.T) {
-	fmt.Println("\n=== Test CheckSpecifier ===")
+	fmt.Println("\n=== CheckSpecifier ===")
 	// ==== CheckSlice test. ==== //
 	/* ][i */
 	l := SplitSpecifier("][i")
-	PrintList(l)
 	result, err := CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for ][i test")
@@ -23,7 +22,6 @@ func TestCheckSpecifier(t *testing.T) {
 	}
 	/* [32c32 */
 	l = SplitSpecifier("[32c32")
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for [32c32 test")
@@ -36,7 +34,6 @@ func TestCheckSpecifier(t *testing.T) {
 	}
 	/* ]]32c32 */
 	l = SplitSpecifier("]]32c32")
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for ]]32c32 test")
@@ -49,7 +46,6 @@ func TestCheckSpecifier(t *testing.T) {
 	}
 	/* [[[[32c32 */
 	l = SplitSpecifier("[[[[32c32")
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for [[[[32c32 test")
@@ -62,7 +58,6 @@ func TestCheckSpecifier(t *testing.T) {
 	}
 	/* []i */
 	l = SplitSpecifier("[]i")
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result != true {
 		fmt.Println("Result should be true for []i test. Error:", err)
@@ -73,7 +68,6 @@ func TestCheckSpecifier(t *testing.T) {
 	// ==== CheckSliceSize test. ==== //
 	/* []-10 */
 	l = SplitSpecifier("[]-10")
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for []-10 test")
@@ -86,7 +80,6 @@ func TestCheckSpecifier(t *testing.T) {
 	}
 	/* []-i */
 	l = SplitSpecifier("[]-i")
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for []-10 test")
@@ -100,7 +93,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* []00s */
 	s := "[]00s"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for ", s, "test")
@@ -114,7 +106,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* []1.5i */
 	s = "[]1.5s"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for ", s, "test")
@@ -128,7 +119,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* []12c32 */
 	s = "[]12c32"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result != true {
 		fmt.Println("Result should be true for ", s, "test. Error:", err)
@@ -140,7 +130,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* *f32 */
 	s = "*f32"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result != true {
 		fmt.Println("Result should be true for ", s, "test. Error:", err)
@@ -151,7 +140,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* []*s */
 	s = "[]*s"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result != true {
 		fmt.Println("Result should be true for ", s, "test. Error:", err)
@@ -173,7 +161,6 @@ func TestCheckSpecifier(t *testing.T) {
 	}
 	/* []32*32 -> false, "Missing type." */
 	l = SplitSpecifier("[]32*32")
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false []32*32")
@@ -186,7 +173,6 @@ func TestCheckSpecifier(t *testing.T) {
 	}
 	/* *d */
 	l = SplitSpecifier("*d")
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false *d")
@@ -201,7 +187,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* f- */
 	s = "f-"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for", s, "test.")
@@ -215,7 +200,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* ui-32 */
 	s = "ui-32"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for", s, "test.")
@@ -229,7 +213,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* []c0 */
 	s = "[]c0"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for", s, "test.")
@@ -243,7 +226,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* f1.1 */
 	s = "f1.1"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for", s, "test.")
@@ -257,7 +239,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* []c44 */
 	s = "[]c44"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for", s, "test.")
@@ -272,7 +253,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* r32 */
 	s = "[]r32"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for", s, "test.")
@@ -286,7 +266,6 @@ func TestCheckSpecifier(t *testing.T) {
 	/* c8 */
 	s = "c8"
 	l = SplitSpecifier(s)
-	PrintList(l)
 	result, err = CheckSpecifier(l)
 	if result == true {
 		fmt.Println("Result should be false for", s, "test.")

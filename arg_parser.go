@@ -23,8 +23,8 @@ func GetSpec(s string) string {
 	return s
 }
 
-// BrakeFormat - function used to brake the format string into a list of formats.
-// @fmt: the format.
+// BrakeFormat - function used to brake the format string into a list of specifiers.
+// @format: the format.
 // @return: list of strings representing the types.
 // Possible types: i8, i16, i32, i64, ui8, ui16, ui32, ui64
 //                 i, ui, r, by, f32, f64, c32, c64, b, s.
