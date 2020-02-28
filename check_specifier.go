@@ -5,18 +5,9 @@ import (
 	"strconv"
 )
 
-// Specifier - structure used to store the information regarding a specifier.
-type Specifier struct {
-	slice       bool
-	pointerType bool
-	sliceSize   uint
-	bitSize     uint
-	theType     string
-}
-
 func checkSlice(slice string) (bool, string) {
 	if slice != "" && slice != "[]" {
-		return false, ("Invalid slice specifier: " + slice) // TESTED.
+		return false, ("Invalid slice specifier: " + slice)
 	}
 	return true, ""
 }
@@ -24,7 +15,7 @@ func checkSlice(slice string) (bool, string) {
 func checkSliceSize(size string) (bool, string) {
 	if size != "" {
 		sizeInt, err := strconv.Atoi(size)
-		if err != nil {
+		if err != nil { // should happen also when the slice size is a real number.
 			return false, ("Invalid slice size: " + size)
 		} else if sizeInt < 0 {
 			return false, ("Slice size is negative: " + size)
@@ -32,7 +23,7 @@ func checkSliceSize(size string) (bool, string) {
 			return false, ("Slice size is zero: " + size)
 		}
 	}
-	return true, ""
+	return true, "" // TESTED.
 }
 
 func checkPointerType(ptype string) (bool, string) {
@@ -52,7 +43,7 @@ func checkType(t string) (bool, string) {
 		}
 	}
 	if t == "" {
-		return false, "Missing type." // TESTED.
+		return false, "Missing type."
 	}
 	return false, ("Unknown type: " + t)
 }
@@ -69,12 +60,30 @@ func checkBitSize(bsize string) (bool, string) {
 	if err != nil {
 		return false, ("Invalid bit size: " + bsize)
 	}
+	if val < 0 {
+		return false, ("Bit size is negative: " + bsize)
+	} else if val == 0 {
+		return false, ("Bit size is zero: " + bsize)
+	}
 	for i := 0; i < length; i++ {
 		if values[i] == val {
 			return true, ""
 		}
 	}
 	return false, "Invalit bit size: " + bsize + ". Valid values are: 8, 16, 32, 64."
+}
+
+func checkTypeBitSize(t, bs string) (bool, string) {
+	if t == "f" || t == "c" {
+		if bs != "32" && bs != "64" {
+			return false, "For the float or complex type, the valid bit sizes are 32 or 64"
+		}
+	} else if t == "r" || t == "by" || t == "b" || t == "s" {
+		if bs != "" {
+			return false, "For the rune, byte, bool or string type, you cannot specify any bit size"
+		}
+	}
+	return true, ""
 }
 
 // CheckSpecifier - function used to cerify if the elements of a specifier are valid.
@@ -89,13 +98,25 @@ func CheckSpecifier(spec *list.List) (bool, string) {
 	length := len(functions)
 
 	el := spec.Front()
-
+	t, bs := "", "" // type and bitSize.
+	// check each element.
 	for i := 0; i < length; i++ {
+		if i == 3 {
+			t = el.Value.(string)
+		} else if i == 4 {
+			bs = el.Value.(string)
+		}
 		result, err := functions[i](el.Value.(string))
 		if result == false {
 			return false, err
 		}
 		el = el.Next()
 	}
+	// check the correspondence between the type and the bit size.
+	result, err := checkTypeBitSize(t, bs)
+	if result == false {
+		return false, err
+	}
+	// all fine.
 	return true, ""
 }

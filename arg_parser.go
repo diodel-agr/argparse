@@ -93,15 +93,11 @@ func SplitSpecifier(t string) *list.List {
 	if j != d {
 		e = j // j now points to the bits size.
 	}
-	/* print index. */
-	//fmt.Println(a, b, c, d, e)
 	slice := t[a:b]
 	sliceSize := t[b:c]
 	pointerType := t[c:d]
 	theType := t[d:e]
 	bitSize := t[e:]
-	/* print result. */
-	//fmt.Println("input:", t, " ->", GetSpec(slice), " ", GetSpec(sliceSize), " ", GetSpec(pointerType), " ", GetSpec(theType), " ", GetSpec(bitSize))
 	/* return result. */
 	result := list.New()
 	result.PushBack(slice)
@@ -110,38 +106,6 @@ func SplitSpecifier(t string) *list.List {
 	result.PushBack(theType)
 	result.PushBack(bitSize)
 	return result
-}
-
-// CheckFormat - function used to check if the format given is valid.
-// @fmt: the list containitng the types.
-// @return: true if the format is valid, false otherwise.
-// The types from the @flist argument has to be valid types.
-// Example: []i[]i is not valid because the program will not know when one array ends and the other begins.
-func CheckFormat(flist *list.List) bool {
-	/*
-		isArray := false
-		arraySize := 0
-		numbers := "0123456789"
-		if c == '[' { // array type.
-			isArray = true
-		} else if c == ']' && isArray == false {
-			// format error.
-			errmsg := "Invalid format:" + format
-			panic(errors.New(errmsg))
-		} else if string.Contains(c, numbers) == true { // number detected.
-			if isArray == false {
-				// format error.
-				panic(errors.New("Invalid format:", format))
-			} else if arraySize == 0 && c == '0' {
-				panic(errors.New("Invalid format:", format, "Array size begins with or is 0."))
-			}
-			// increase array size.
-			arraySize = arraySize*10 + (c - '0')
-		} else { // a type is expected.
-		}
-		return true
-	*/
-	return true
 }
 
 // ParseArgList - function used to parse the arguments from the commamd line.
