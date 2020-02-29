@@ -116,13 +116,16 @@ func ParseArgList() *list.List {
 	if len(argv) == 0 {
 		fmt.Println("No command line arguments.")
 		return nil
+	} else if len(argv) == 1 { // TO DO: read from file.
 	} else {
 		format := argv[0]
-		flist := BrakeFormat(format)
-		PrintList(flist)
-		for l := flist.Front(); l != nil; l = l.Next() {
-			SplitSpecifier(l.Value.(string))
+		result, flist, err := CheckFormat(format)
+		if result == false {
+			fmt.Println("Invalid format:", err)
+			// panic.
 		}
+		// parse the command line arguments.
+		fmt.Println(flist)
 	}
 	return nil
 }
