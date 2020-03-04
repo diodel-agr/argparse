@@ -113,7 +113,7 @@ func TestCheckFormat(t *testing.T) {
 	} else {
 		fmt.Println("Test " + format + " OK.")
 	}
-	//* test Specifier::toString() */
+	/* test Specifier::toString() */
 	s := Specifier{true, true, 5, 32, "ui"}
 	if s.toString() != "[]5*ui32" {
 		fmt.Println("Invalid Specifier.toString()")
