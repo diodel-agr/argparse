@@ -80,45 +80,49 @@ func (s Specifier) toString() string {
 }
 
 // isTypeCompatible - function used to check if the type of two slices are compatible.
-// The incompatible types: [int, uint, rune, byte, float, complex] and [boolean, string]
-func (s Specifier) isTypeCompatible(s2 *Specifier) bool {
+// The incompatible types:
+// [int, uint, rune, byte, float, complex] because they are all numeric, and
+// [boolean, string] because they are all strings.
+func (s Specifier) isTypeCompatible(p *Specifier) bool {
 	if s.theType == "i" || s.theType == "ui" || s.theType == "f" || s.theType == "c" || s.theType == "r" || s.theType == "by" {
-		// s1 is integer, float or complex.
-		if s2.theType == "i" || s2.theType == "ui" || s2.theType == "f" || s2.theType == "c" || s2.theType == "r" || s2.theType == "by" {
-			// s2 is also integer, float or complex.
+		// s is integer, float or complex.
+		if p.theType == "i" || p.theType == "ui" || p.theType == "f" || p.theType == "c" || p.theType == "r" || p.theType == "by" {
+			// p is also integer, float or complex.
 			return false
 		}
 	}
 	if s.theType == "b" || s.theType == "s" {
-		// s1 is boolean or string.
-		if s2.theType == "b" || s2.theType == "s" {
-			// s2 is also boolean or string.
+		// s is boolean or string.
+		if p.theType == "b" || p.theType == "s" {
+			// p is also boolean or string.
 			return false
 		}
 	}
 	return true
 }
 
-// sameSpecifier - function used to check whether the s1 specifier is is compatible with the s2 specifier.
-// The basic rule is that 2 types are not compatible if they are both slices and neither or them does not have the size specified.
-// For instance, if the cmd line arguments are []i[]i 10 20 30 40, []i and []ui are not compatible because there is no way to decide
-// when the elements of one slice ends and one begins. The possible results are [10], [20, 30, 40] or [10, 20], [30, 40] or ...
+// isCompatible - function used to check whether the s specifier is is compatible with the p specifier.
+// The basic rule is that 2 types are not compatible if they are both numerical or stings and they are
+// slices and neither or them does not have the size specified.
+// For instance, if the cmd line arguments are []i[]i 10 20 30 40, []i and []ui are not compatible because they are both numerical and
+// there is no way to decide when the elements of one slice ends and one begins.
+// In this case, the possible results are [10], [20, 30, 40] or [10, 20], [30, 40] or [10, 20, 30], [40].
 // []i and []2i are compatible.
 // []i and i are compatible.
 // []i and []f32 are compatible.
 // []i and []ui are not compatible.
-func (s Specifier) isCompatible(s2 *Specifier) bool {
-	if s.slice == false || s2.slice == false {
+func (s Specifier) isCompatible(p *Specifier) bool {
+	if s.slice == false || p.slice == false {
 		return true // one of them is not slice.
 	}
 	// both specifiers are slices.
 	// check if either of the slices have a size specified.
-	if s.sliceSize != 0 || s2.sliceSize != 0 {
+	if s.sliceSize != 0 || p.sliceSize != 0 {
 		return true
 	}
 	// both specifiers are slices and don't have their size specified.
 	// check if the 2 types are compatible.
-	return s.isTypeCompatible(s2)
+	return s.isTypeCompatible(p)
 }
 
 // checkCompatibility - function used to check if the types from a format are compatible.
@@ -136,7 +140,6 @@ func checkCompatibility(sl *[]Specifier) (bool, string) {
 		}
 		s1 = s2
 	}
-
 	return true, ""
 }
 
@@ -160,7 +163,6 @@ func CheckFormat(format string) (bool, *[]Specifier, string) {
 		PrintList(slist)
 		result, err := CheckSpecifier(slist)
 		if result == false {
-			fmt.Println("Error at specifier", slist, ":", err)
 			return result, nil, err
 		}
 		// create and add a new specifier to the specifier slice.
@@ -169,7 +171,6 @@ func CheckFormat(format string) (bool, *[]Specifier, string) {
 	// check if the specifiers are compatible.
 	result, err := checkCompatibility(&sl)
 	if result == false {
-		fmt.Println(err)
 		return false, nil, err
 	}
 	// all fine, return true.

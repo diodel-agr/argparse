@@ -23,7 +23,7 @@ func checkSliceSize(size string) (bool, string) {
 			return false, ("Slice size is zero: " + size)
 		}
 	}
-	return true, "" // TESTED.
+	return true, ""
 }
 
 func checkPointerType(ptype string) (bool, string) {
@@ -49,7 +49,7 @@ func checkType(t string) (bool, string) {
 }
 
 func checkBitSize(bsize string) (bool, string) {
-	values := []int{8, 16, 32, 64}
+	values := []int{8, 16, 32, 64, 128}
 	length := len(values)
 
 	if bsize == "" {
@@ -70,13 +70,17 @@ func checkBitSize(bsize string) (bool, string) {
 			return true, ""
 		}
 	}
-	return false, "Invalit bit size: " + bsize + ". Valid values are: 8, 16, 32, 64."
+	return false, "Invalit bit size: " + bsize + ". Valid values are: 8, 16, 32, 64, 128."
 }
 
 func checkTypeBitSize(t, bs string) (bool, string) {
-	if t == "f" || t == "c" {
+	if t == "f" {
 		if bs != "32" && bs != "64" {
-			return false, "For the float or complex type, the valid bit sizes are 32 or 64"
+			return false, "For the float type, the valid bit sizes are 32 or 64"
+		}
+	} else if t == "c" {
+		if bs != "64" && bs != "128" {
+			return false, "For the complex type, the valid bit size are 64 or 128"
 		}
 	} else if t == "r" || t == "by" || t == "b" || t == "s" {
 		if bs != "" {

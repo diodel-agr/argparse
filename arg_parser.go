@@ -10,7 +10,11 @@ import (
 // PrintList - function used to print the elements of a list.List object.
 func PrintList(l *list.List) {
 	for e := l.Front(); e != nil; e = e.Next() {
-		fmt.Print(e.Value, " ")
+		if e.Value == "" {
+			fmt.Print("- ")
+		} else {
+			fmt.Print(e.Value, " ")
+		}
 	}
 	fmt.Println()
 }
@@ -117,6 +121,8 @@ func ParseArgList() *list.List {
 		fmt.Println("No command line arguments.")
 		return nil
 	} else if len(argv) == 1 { // TO DO: read from file.
+		fmt.Println("Reading arguments from a file not yet implemented!")
+		return nil
 	} else {
 		format := argv[0]
 		result, flist, err := CheckFormat(format)
@@ -126,6 +132,6 @@ func ParseArgList() *list.List {
 		}
 		// parse the command line arguments.
 		fmt.Println(flist)
+		return nil
 	}
-	return nil
 }

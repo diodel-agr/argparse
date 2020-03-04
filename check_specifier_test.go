@@ -116,8 +116,8 @@ func TestCheckSpecifier(t *testing.T) {
 	} else {
 		fmt.Println("Test", s, "OK.")
 	}
-	/* []12c32 */
-	s = "[]12c32"
+	/* []12c64 */
+	s = "[]12c64"
 	l = SplitSpecifier(s)
 	result, err = CheckSpecifier(l)
 	if result != true {
@@ -243,7 +243,7 @@ func TestCheckSpecifier(t *testing.T) {
 	if result == true {
 		fmt.Println("Result should be false for", s, "test.")
 		t.Error("Result should be false for " + s + "test.")
-	} else if result == false && err != "Invalit bit size: 44. Valid values are: 8, 16, 32, 64." {
+	} else if result == false && err != "Invalit bit size: 44. Valid values are: 8, 16, 32, 64, 128." {
 		fmt.Println(err)
 		t.Errorf(err)
 	} else {
@@ -270,7 +270,20 @@ func TestCheckSpecifier(t *testing.T) {
 	if result == true {
 		fmt.Println("Result should be false for", s, "test.")
 		t.Error("Result should be false for " + s + "test.")
-	} else if result == false && err != "For the float or complex type, the valid bit sizes are 32 or 64" {
+	} else if result == false && err != "For the complex type, the valid bit size are 64 or 128" {
+		fmt.Println(err)
+		t.Errorf(err)
+	} else {
+		fmt.Println("Test", s, "OK.")
+	}
+	/* f16 */
+	s = "f16"
+	l = SplitSpecifier(s)
+	result, err = CheckSpecifier(l)
+	if result == true {
+		fmt.Println("Result should be false for", s, "test.")
+		t.Error("Result should be false for " + s + "test.")
+	} else if result == false && err != "For the float type, the valid bit sizes are 32 or 64" {
 		fmt.Println(err)
 		t.Errorf(err)
 	} else {
