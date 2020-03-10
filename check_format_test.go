@@ -16,13 +16,13 @@ func TestCheckFormat(t *testing.T) {
 	} else {
 		fmt.Println("Test " + format + " OK.")
 	}
-	/* []ii[]f32 */
+	/* []ii[]f32 -> error */
 	fmt.Println()
 	format = "[]ii[]f32"
 	result, _, err = CheckFormat(format)
-	if result == false {
-		fmt.Println("Result for", format, " test should be true.")
-		t.Error("Result for " + format + " test should be true. Error: " + err)
+	if result == true {
+		fmt.Println("Result for", format, " test should be false.")
+		t.Error("Result for " + format + " test should be false. Error: " + err)
 	} else {
 		fmt.Println("Test " + format + " OK.")
 	}
@@ -108,6 +108,39 @@ func TestCheckFormat(t *testing.T) {
 	format = "[]ui8[]b"
 	result, _, err = CheckFormat(format)
 	if result == false {
+		fmt.Println("Result for", format, " test should be false.")
+		t.Error("Result for " + format + " test should be false. Error: " + err)
+	} else {
+		fmt.Println("Test " + format + " OK.")
+	}
+	/* []ii[]i -> error. */
+	fmt.Println()
+	format = "[]ii[]i"
+	result, _, err = CheckFormat(format)
+	if result == true {
+		fmt.Println("Result for", format, " test should be false.")
+		t.Error("Result for " + format + " test should be false. Error: " + err)
+	} else if result == false && err != "Incompatible types: []i and []i" {
+		fmt.Println(err)
+		t.Error(err)
+	} else {
+		fmt.Println("Test " + format + " OK.")
+	}
+	/* []is[]i -> ok. */
+	fmt.Println()
+	format = "[]is[]i"
+	result, _, err = CheckFormat(format)
+	if result == false {
+		fmt.Println("Result for", format, " test should be true.")
+		t.Error("Result for " + format + " test should be true. Error: " + err)
+	} else {
+		fmt.Println("Test " + format + " OK.")
+	}
+	/* []i[]f[]c64 -> eror. */
+	fmt.Println()
+	format = "[]i[]f32[]c64"
+	result, _, err = CheckFormat(format)
+	if result == true {
 		fmt.Println("Result for", format, " test should be false.")
 		t.Error("Result for " + format + " test should be false. Error: " + err)
 	} else {

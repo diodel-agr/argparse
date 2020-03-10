@@ -79,7 +79,7 @@ func (s Specifier) toString() string {
 	return result
 }
 
-// isTypeCompatible - function used to check if the type of two slices are compatible.
+// isTypeCompatible - function used to check if the types of two slices are compatible.
 // The incompatible types:
 // [int, uint, rune, byte, float, complex] because they are all numeric, and
 // [boolean, string] because they are all strings.
@@ -132,13 +132,16 @@ func checkCompatibility(sl *[]Specifier) (bool, string) {
 	if length <= 1 {
 		return true, ""
 	}
-	s1 := (*sl)[0]
-	for i := 1; i < length; i++ {
-		s2 := (*sl)[i]
-		if s1.isCompatible(&s2) == false {
-			return false, "Incompatible types: " + s1.toString() + " and " + s2.toString()
+	for i := 0; i < length-1; i++ {
+		s1 := (*sl)[i]
+		for j := i + 1; j < length; j++ {
+			s2 := (*sl)[j]
+			if s1.isCompatible(&s2) == false {
+				return false, "Incompatible types: " + s1.toString() + " and " + s2.toString()
+			} else if s1.isTypeCompatible(&s2) == true {
+				break
+			}
 		}
-		s1 = s2
 	}
 	return true, ""
 }

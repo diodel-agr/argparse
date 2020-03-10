@@ -23,8 +23,8 @@ func numericVar(s string) (interface{}, string) {
 // @return: the variable.
 func createVariable(s Specifier, v []string) (interface{}, string) {
 	// 2 variable care vor tine adresa unor functii.
-	var varType func(string) (interface{}, string)
-	var varconv func(string) (interface{}, string)
+	//var varType func(string) (interface{}, string)
+	//var varconv func(string) (interface{}, string)
 	// in urmatorul switch vom seta adresele functiilor
 	// apoi apelam functiile si intoarcem rezultatul.
 	switch s.theType {
@@ -32,7 +32,7 @@ func createVariable(s Specifier, v []string) (interface{}, string) {
 	case "ui": // unsigned int
 	case "r": // rune (int32)
 	case "by": // byte (uint8)
-		varType = numericVar
+		//varType = numericVar
 	case "f": // float
 		//
 	case "c": // complex
