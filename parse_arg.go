@@ -6,42 +6,152 @@ import (
 	"strconv"
 )
 
-// numericVar - function used to convert the the string @s to int.
+// integerVar - function used to convert the the string @s to int.
 // @s: the string representing a numeric type.
-// @return the integer.
-func numericVar(s string) (interface{}, string) {
-	result, err := strconv.Atoi(s)
+// @return the integer or an error message.
+func (s Specifier) integerVar(str string, ls *list.List) string {
+	if s.theType == "i" || s.theType == "ui" { // int or uint.
+		// check bit size.
+
+	} else if s.theType == "r" { // rune, alias int32.
+
+	} else if s.theType == "by" { // byte, alias int8.
+
+	}
+	result, err := strconv.ParseInt(str, 10, s.bitSize)
 	if err != nil {
-		return nil, "Error converting from " + s + " to "
+		return nil, "Error converting from string " + s + " to integer"
 	}
 	return result, ""
+}
+
+// floatVar - function used to convert @s string to a float variable of bit size @size.
+// @s: the string to convert.
+// @size: the bit size.
+// @return: the float variable or an error message.
+func (s Specifier) floatVar(str string, ls *list.List) string {
+	result, err := strconv.ParseFloat(str, s.bitSize)
+	if err != nil {
+		return "Error converting string " + str + " to float"
+	}
+	ls.PushBack(result)
+	return ""
+}
+
+func (s Specifier) booleanVar(str string, ls *list.List) string {
+	if str == "true" {
+		ls.PushBack(true)
+	} else {
+		ls.PushBack(false)
+	}
+	return ""
+}
+
+func (s Specifier) stringVar(str string, ls *list.List) string {
+	ls.PushBack(str)
+	return ""
+}
+
+// convertSimple - function used to convert the contents of the @s string to the type defined by the @s specifier.
+// @s: the specifier.
+// @val: the string to convert.
+// @return: the created variable os a error message.
+func (s Specifier) convertSimple(str string, ls *list.List) string {
+	// check if the type is an integer type.
+	if s.theType == "i" || s.theType == "ui" || s.theType == "r" || s.theType == "by" {
+		return s.integerVar(str)
+	} else if s.theType == "f" {
+		return s.floatVar(str)
+	} else if s.theType == "b" {
+		return s.booleanVar(str)
+	} else if s.theType == "s" {
+		return s.stringVar(str)
+	} else if s.theType == "c" {
+		return nil, "Complex type in Specifier.Convert(string) function"
+	}
+	return nil, "Unknown type in Specifier.Convert(string) function"
+}
+
+// convertSlice - function used to convert the @str slice which should store a complex variable.
+// @s: the specifier.
+// @str: slice containing the values to convert.
+// @return: the complex number.
+func (s Specifier) convertSlice(str []string, ls *list.List) string {
+	if s.theType == "c" {
+		// modify bit size.
+		s.bitSize = s.bitSize << 1
+		fct := func() {
+			s.bitSize = s.bitSize >> 1
+		}
+		defer fct()
+		// convert using float function.
+		re, err := s.floatVar(str[0])
+		if err != "" {
+			return nil, err
+		}
+		im, err := s.floatVar(str[1])
+		if err != "" {
+			return nil, err
+		}
+		// return result.
+		if s.bitSize == 64 { // 128 bit complex.
+			return complex128(complex(re.(float64), im.(float64))), ""
+		}
+		// 64 bit complex.
+		return complex64(complex(re.(float32), im.(float32))), ""
+	}
+	return nil, "Non-complex type in Specifier.Convert([]string) function"
+}
+
+// Convert - function used to wrap the convertion function.
+// @s: the specifier.
+// @str: the string to convert.
+// @return: the variable or the error message.
+func (s Specifier) Convert(str []string, ls *list.List) string {
+	if s.theType == "c" {
+		return s.convertSlice(str, ls)
+	}
+	return s.convertSimple(str[0], ls)
 }
 
 // createVariable - function used to create the variable corresponding on the specifier @s type.
 // @s: specifier.
 // @v: the string containing the values to convert.
 // @return: the variable.
+// i/ui -> {0, 8, 16, 32, 64}
+// r -> rune direct (int32)
+// by -> byte direct (int8)
+// f -> {32, 64}
+// c -> {64, 128}
+// b -> boolean
+// s -> string
 func createVariable(s Specifier, v []string) (interface{}, string) {
 	// 2 variable care vor tine adresa unor functii.
-	//var varType func(string) (interface{}, string)
-	//var varconv func(string) (interface{}, string)
+	var varType func(string, int) (interface{}, string)
+	var varConv func(string) (interface{}, string)
 	// in urmatorul switch vom seta adresele functiilor
-	// apoi apelam functiile si intoarcem rezultatul.
+	// select the type to which to parse the string: integer, float or string.
 	switch s.theType {
 	case "i": // int
+		varType = integerVar
 	case "ui": // unsigned int
+		varType = integerVar
 	case "r": // rune (int32)
+		varType = integerVar
 	case "by": // byte (uint8)
-		//varType = numericVar
+		varType = integerVar
 	case "f": // float
-		//
+		varType = floatVar
 	case "c": // complex
-		//
+		varType = floatVar
 	case "b": // boolean
-		//
+		varType = booleanVar
 	case "s": // string
-
+		varType = stringVar
+	default:
+		return nil, "Unknown specifier type: " + s.theType
 	}
+	// select the exact type and bit size to which to convert.
 	return nil, ""
 }
 

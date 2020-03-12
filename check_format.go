@@ -11,7 +11,7 @@ type Specifier struct {
 	slice       bool
 	pointerType bool
 	sliceSize   uint
-	bitSize     uint
+	bitSize     int
 	theType     string
 }
 
@@ -21,7 +21,7 @@ func NewSpecifier(l *list.List) *Specifier {
 	pointerType := false
 	sliceSize := uint(0)
 	theType := ""
-	bitSize := uint(0)
+	bitSize := int(0)
 	el := l.Front()
 	// slice.
 	str := el.Value.(string)
@@ -50,7 +50,7 @@ func NewSpecifier(l *list.List) *Specifier {
 	str = el.Value.(string)
 	if str != "" {
 		result, _ := strconv.Atoi(str)
-		bitSize = uint(result)
+		bitSize = int(result)
 	}
 	// create the result.
 	return &Specifier{slice, pointerType, sliceSize, bitSize, theType}
