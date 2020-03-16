@@ -2,7 +2,6 @@ package main
 
 import (
 	"container/list"
-	"fmt"
 	"strconv"
 )
 
@@ -154,16 +153,11 @@ func checkCompatibility(sl *[]Specifier) (bool, string) {
 // Example: []i[]i is not valid because the specifiers are not compatible.
 // The program will not know when one array ends and the other begins.
 func CheckFormat(format string) (bool, *[]Specifier, string) {
-	fmt.Println("Checking format:", format)
 	speclist := BrakeFormat(format) // speclist = the list of specifiers.
 	sl := []Specifier{}
-	fmt.Print("Specifier list: ")
-	PrintList(speclist)
 	// check if each specifier is valid.
 	for spec := speclist.Front(); spec != nil; spec = spec.Next() {
 		slist := SplitSpecifier(spec.Value.(string))
-		fmt.Print("Split: ")
-		PrintList(slist)
 		result, err := CheckSpecifier(slist)
 		if result == false {
 			return result, nil, err

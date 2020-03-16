@@ -6,23 +6,114 @@ import (
 	"strconv"
 )
 
-// integerVar - function used to convert the the string @s to int.
+var (
+	intBitSize = 64
+)
+
+func (s Specifier) convertToInt(str string, ls *list.List) string {
+	// check bit size.
+	switch s.bitSize {
+	case 0:
+		result, err := strconv.ParseInt(str, 10, intBitSize)
+		if err != nil {
+			return "Error: " + err.Error()
+		}
+		ls.PushBack(int(result))
+	case 8:
+		result, err := strconv.ParseInt(str, 10, 8)
+		if err != nil {
+			return "Error: " + err.Error()
+		}
+		ls.PushBack(int8(result))
+	case 16:
+		result, err := strconv.ParseInt(str, 10, 16)
+		if err != nil {
+			return "Error: " + err.Error()
+		}
+		ls.PushBack(int16(result))
+	case 32:
+		result, err := strconv.ParseInt(str, 10, 32)
+		if err != nil {
+			return "Error: " + err.Error()
+		}
+		ls.PushBack(int32(result))
+	case 64:
+		result, err := strconv.ParseInt(str, 10, 64)
+		if err != nil {
+			return "Error: " + err.Error()
+		}
+		ls.PushBack(int64(result))
+		/*
+			default:
+				return "Unknown integer bit size: " + strconv.Itoa(s.bitSize)
+		*/
+	}
+	return ""
+}
+
+func (s Specifier) convertToUInt(str string, ls *list.List) string {
+	// check bit size.
+	switch s.bitSize {
+	case 0:
+		result, err := strconv.ParseUint(str, 10, intBitSize)
+		if err != nil {
+			return "Error: " + err.Error()
+		}
+		ls.PushBack(uint(result))
+	case 8:
+		result, err := strconv.ParseUint(str, 10, 8)
+		if err != nil {
+			return "Error: " + err.Error()
+		}
+		ls.PushBack(uint8(result))
+	case 16:
+		result, err := strconv.ParseUint(str, 10, 16)
+		if err != nil {
+			return "Error: " + err.Error()
+		}
+		ls.PushBack(uint16(result))
+	case 32:
+		result, err := strconv.ParseUint(str, 10, 32)
+		if err != nil {
+			return "Error: " + err.Error()
+		}
+		ls.PushBack(uint32(result))
+	case 64:
+		result, err := strconv.ParseUint(str, 10, 64)
+		if err != nil {
+			return "Error: " + err.Error()
+		}
+		ls.PushBack(uint64(result))
+		/*
+			default:
+				return "Unknown integer bit size: " + strconv.Itoa(s.bitSize)
+		*/
+	}
+	return ""
+}
+
+// integerVar - function used to convert the the string @s to a integer type.
 // @s: the string representing a numeric type.
 // @return the integer or an error message.
 func (s Specifier) integerVar(str string, ls *list.List) string {
-	if s.theType == "i" || s.theType == "ui" { // int or uint.
-		// check bit size.
-
+	if s.theType == "i" { // int or uint.
+		return s.convertToInt(str, ls)
+	} else if s.theType == "ui" {
+		return s.convertToUInt(str, ls)
 	} else if s.theType == "r" { // rune, alias int32.
-
+		result, err := strconv.ParseInt(str, 10, 32)
+		if err != nil {
+			return "Error converting string to rune (int32). Error: " + err.Error()
+		}
+		ls.PushBack(rune(result))
 	} else if s.theType == "by" { // byte, alias int8.
-
+		result, err := strconv.ParseUint(str, 10, 8)
+		if err != nil {
+			return "Error converting string to byte (int8). Error: " + err.Error()
+		}
+		ls.PushBack(byte(result))
 	}
-	result, err := strconv.ParseInt(str, 10, s.bitSize)
-	if err != nil {
-		return nil, "Error converting from string " + s + " to integer"
-	}
-	return result, ""
+	return ""
 }
 
 // floatVar - function used to convert @s string to a float variable of bit size @size.
@@ -32,9 +123,13 @@ func (s Specifier) integerVar(str string, ls *list.List) string {
 func (s Specifier) floatVar(str string, ls *list.List) string {
 	result, err := strconv.ParseFloat(str, s.bitSize)
 	if err != nil {
-		return "Error converting string " + str + " to float"
+		return "Error: " + err.Error()
 	}
-	ls.PushBack(result)
+	if s.bitSize == 32 {
+		ls.PushBack(float32(result))
+	} else {
+		ls.PushBack(result)
+	}
 	return ""
 }
 
@@ -52,107 +147,66 @@ func (s Specifier) stringVar(str string, ls *list.List) string {
 	return ""
 }
 
-// convertSimple - function used to convert the contents of the @s string to the type defined by the @s specifier.
+// convertSimple - function used to convert the contents of the @str string to the type defined by the @s specifier.
 // @s: the specifier.
 // @val: the string to convert.
 // @return: the created variable os a error message.
 func (s Specifier) convertSimple(str string, ls *list.List) string {
 	// check if the type is an integer type.
 	if s.theType == "i" || s.theType == "ui" || s.theType == "r" || s.theType == "by" {
-		return s.integerVar(str)
+		return s.integerVar(str, ls)
 	} else if s.theType == "f" {
-		return s.floatVar(str)
+		return s.floatVar(str, ls)
 	} else if s.theType == "b" {
-		return s.booleanVar(str)
-	} else if s.theType == "s" {
-		return s.stringVar(str)
-	} else if s.theType == "c" {
-		return nil, "Complex type in Specifier.Convert(string) function"
-	}
-	return nil, "Unknown type in Specifier.Convert(string) function"
+		return s.booleanVar(str, ls)
+	} //else if s.theType == "s" {
+	return s.stringVar(str, ls)
 }
 
 // convertSlice - function used to convert the @str slice which should store a complex variable.
 // @s: the specifier.
 // @str: slice containing the values to convert.
 // @return: the complex number.
-func (s Specifier) convertSlice(str []string, ls *list.List) string {
-	if s.theType == "c" {
-		// modify bit size.
+func (s Specifier) convertComplex(str []string, ls *list.List) string {
+	// modify bit size.
+	s.bitSize = s.bitSize >> 1
+	fct := func() {
 		s.bitSize = s.bitSize << 1
-		fct := func() {
-			s.bitSize = s.bitSize >> 1
-		}
-		defer fct()
-		// convert using float function.
-		re, err := s.floatVar(str[0])
-		if err != "" {
-			return nil, err
-		}
-		im, err := s.floatVar(str[1])
-		if err != "" {
-			return nil, err
-		}
-		// return result.
-		if s.bitSize == 64 { // 128 bit complex.
-			return complex128(complex(re.(float64), im.(float64))), ""
-		}
-		// 64 bit complex.
-		return complex64(complex(re.(float32), im.(float32))), ""
 	}
-	return nil, "Non-complex type in Specifier.Convert([]string) function"
+	defer fct()
+	// convert.
+	re, err := strconv.ParseFloat(str[0], s.bitSize)
+	if err != nil {
+		return "Error converting string to float(complex). Error: " + err.Error()
+	}
+	im, err := strconv.ParseFloat(str[1], s.bitSize)
+	if err != nil {
+		return "Error converting string to float(complex). Error: " + err.Error()
+	}
+	// create variable.
+	if s.bitSize == 32 {
+		result := complex64(complex(re, im))
+		ls.PushBack(result)
+	} else {
+		result := complex128(complex(re, im))
+		ls.PushBack(result)
+	}
+	return ""
 }
 
-// Convert - function used to wrap the convertion function.
+// convert - function used to wrap the convertion function.
 // @s: the specifier.
 // @str: the string to convert.
 // @return: the variable or the error message.
-func (s Specifier) Convert(str []string, ls *list.List) string {
+func (s Specifier) convert(str []string, ai *int, ls *list.List) string {
 	if s.theType == "c" {
-		return s.convertSlice(str, ls)
+		result := s.convertComplex(str[*ai:(*ai)+2], ls)
+		*ai = *ai + 2
+		return result
 	}
-	return s.convertSimple(str[0], ls)
-}
-
-// createVariable - function used to create the variable corresponding on the specifier @s type.
-// @s: specifier.
-// @v: the string containing the values to convert.
-// @return: the variable.
-// i/ui -> {0, 8, 16, 32, 64}
-// r -> rune direct (int32)
-// by -> byte direct (int8)
-// f -> {32, 64}
-// c -> {64, 128}
-// b -> boolean
-// s -> string
-func createVariable(s Specifier, v []string) (interface{}, string) {
-	// 2 variable care vor tine adresa unor functii.
-	var varType func(string, int) (interface{}, string)
-	var varConv func(string) (interface{}, string)
-	// in urmatorul switch vom seta adresele functiilor
-	// select the type to which to parse the string: integer, float or string.
-	switch s.theType {
-	case "i": // int
-		varType = integerVar
-	case "ui": // unsigned int
-		varType = integerVar
-	case "r": // rune (int32)
-		varType = integerVar
-	case "by": // byte (uint8)
-		varType = integerVar
-	case "f": // float
-		varType = floatVar
-	case "c": // complex
-		varType = floatVar
-	case "b": // boolean
-		varType = booleanVar
-	case "s": // string
-		varType = stringVar
-	default:
-		return nil, "Unknown specifier type: " + s.theType
-	}
-	// select the exact type and bit size to which to convert.
-	return nil, ""
+	result := s.convertSimple(str[*ai], ls)
+	*ai = *ai + 1
+	return result
 }
 
 // parseArguments - function that reads the arguments from the command line and creates the variables.
@@ -160,28 +214,34 @@ func createVariable(s Specifier, v []string) (interface{}, string) {
 // @argv: the slice of arguments from the command line.
 // @return: the list of variables or the error string in case of error.
 func parseArguments(slist []Specifier, argv []string) (*list.List, string) {
+	fmt.Println("Parsing format:", slist)
+	fmt.Println("Parse arguments:", argv)
 	varList := list.New() // the result.
 	si := 0               // specifier index.
 	ai := 0               // argument index.
 	slen := len(slist)    // specifier list length.
 	alen := len(argv)     // argument list length.
-	for si < slen {
+	for si < slen && ai < alen {
 		spec := slist[si] // current specifier.
 		if spec.slice == false {
-			// variable.
-			result, err := createVariable(spec, argv[ai:ai+1])
+			// simple variable.
+			err := spec.convert(argv[:], &ai, varList)
 			if err != "" {
 				return nil, err
 			}
-			varList.PushBack(result)
 		} else if spec.sliceSize == 0 {
 			// unsized slice
 		} else {
 			// sized slice.
 		}
+		si++
+	}
+	fmt.Println(si, ai, slen, alen)
+	if si != slen {
+		return nil, "The given format did not parsed all arguments!"
 	}
 	if ai != alen {
-		fmt.Println("The given format did not parsed all arguments!")
+		return nil, "The format has insuficient specifiers"
 	}
-	return nil, ""
+	return varList, ""
 }
