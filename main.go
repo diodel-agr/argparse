@@ -1,11 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 func main() {
-	ParseArgList()
-	sl := []int{1}
-	fmt.Println(sl[1])
+	listOfVariables := ParseArgList()
+	fmt.Println("The result: ")
+	i := 0
+	for e := listOfVariables.Front(); e != nil; e = e.Next() {
+		fmt.Println(i, ": ", e.Value, "(", reflect.TypeOf(e.Value), ")")
+		i++
+	}
 }
 
 // []iuii[]i is not compatible.

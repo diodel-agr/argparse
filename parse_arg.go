@@ -197,6 +197,7 @@ func (s Specifier) convertComplex(str []string, ls *list.List) string {
 // convert - function used to wrap the convertion function.
 // @s: the specifier.
 // @str: the string to convert.
+// @ai: index of the current value to convert.
 // @return: the variable or the error message.
 func (s Specifier) convert(str []string, ai *int, ls *list.List) string {
 	if s.theType == "c" {
@@ -233,6 +234,10 @@ func parseArguments(slist []Specifier, argv []string) (*list.List, string) {
 			// unsized slice
 		} else {
 			// sized slice.
+			err := spec.convertSizedSlice(argv[:], &ai, varList)
+			if err != "" {
+				return nil, err
+			}
 		}
 		si++
 	}
