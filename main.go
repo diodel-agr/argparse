@@ -5,6 +5,11 @@ import (
 	"reflect"
 )
 
+// i, ui, r, by
+// f
+// c
+// b, s
+
 func main() {
 	listOfVariables := ParseArgList()
 	fmt.Println("The result: ")
@@ -14,5 +19,3 @@ func main() {
 		i++
 	}
 }
-
-// []iuii[]i is not compatible.
