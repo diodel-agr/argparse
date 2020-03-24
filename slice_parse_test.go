@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func testParseArg01(format string, argv []string) string {
+func testSliceParse(format string, argv []string) string {
 	_, slist, err0 := CheckFormat(format)
 	if err0 != "" {
 		return err0
@@ -18,34 +18,34 @@ func testParseArg01(format string, argv []string) string {
 	return err1
 }
 
-func TestParseArguments(t *testing.T) {
-	fmt.Println("\n=== parseArguments ===")
+func TestConvertSizedSlice(t *testing.T) {
+	fmt.Println("\n=== parseArguments[sized slice] ===")
 	// int
-	// i 10 -> OK
-	format := "i"
+	// []1i 10 -> OK
+	format := "[]1i"
 	argv := []string{"10"}
-	err := testParseArg01(format, argv)
+	err := testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
-		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
+		t.Errorf("Invalid format %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *i 10 -> OK
-	format = "*i"
+	// []1*i 10 -> OK
+	format = "[]1*i"
 	argv = []string{"10"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i 12.6 -> err0
+	// []2i 12.6 -> err0
 	fmt.Println()
-	format = "i"
+	format = "[]2i"
 	argv = []string{"12.6"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -53,33 +53,53 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println(err)
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i8 100 -> OK
-	fmt.Println()
-	format = "i8"
+	// []1i8 100 -> OK
+	format = "[]1i8"
 	argv = []string{"100"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
+	if err != "" {
+		fmt.Println("Format", format, " error:", err)
+		t.Errorf("Invalid format %s. Error: %s.", format, err)
+	} else {
+		fmt.Println("Test", format, argv, "OK.")
+	}
+	// []1*i8 99 -> OK
+	format = "[]1*i8"
+	argv = []string{"99"}
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *i8 100 -> OK
+	// []1i8 100 -> OK
 	fmt.Println()
-	format = "*i8"
+	format = "[]1i8"
 	argv = []string{"100"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i8 123.4 -> err0
+	// []1*i8 100 -> OK
 	fmt.Println()
-	format = "i8"
+	format = "[]1*i8"
+	argv = []string{"100"}
+	err = testSliceParse(format, argv)
+	if err != "" {
+		fmt.Println("Format", format, " error:", err)
+		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
+	} else {
+		fmt.Println("Test", format, argv, "OK.")
+	}
+	// []1i8 123.4 -> err0
+	fmt.Println()
+	format = "[]1i8"
 	argv = []string{"123.4"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -87,33 +107,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println(err)
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i16 1024 -> OK
+	// []1i16 1024 -> OK
 	fmt.Println()
-	format = "i16"
+	format = "[]1i16"
 	argv = []string{"1024"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *i16 1024 -> OK
+	// []1*i16 1024 -> OK
 	fmt.Println()
-	format = "*i16"
+	format = "[]1*i16"
 	argv = []string{"1024"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i16 0.10 -> err
+	// []1i16 0.10 -> err
 	fmt.Println()
-	format = "i16"
+	format = "[]1i16"
 	argv = []string{"0.10"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -121,33 +141,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println(err)
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i32 17563 -> OK
+	// []1i32 17563 -> OK
 	fmt.Println()
-	format = "i32"
+	format = "[]1i32"
 	argv = []string{"17563"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *i32 17563 -> OK
+	// []1*i32 17563 -> OK
 	fmt.Println()
-	format = "*i32"
+	format = "[]1*i32"
 	argv = []string{"17563"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i32 100.432 -> err
+	// []1i32 100.432 -> err
 	fmt.Println()
-	format = "i32"
+	format = "[]1i32"
 	argv = []string{"100.432"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -155,33 +175,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println(err)
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i64 123456789 -> OK
+	// []1i64 123456789 -> OK
 	fmt.Println()
-	format = "i64"
+	format = "[]1i64"
 	argv = []string{"123456789"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *i64 123456789 -> OK
+	// []1*i64 123456789 -> OK
 	fmt.Println()
-	format = "*i64"
+	format = "[]1*i64"
 	argv = []string{"123456789"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i64 10.23456 -> err
+	// []1i64 10.23456 -> err
 	fmt.Println()
-	format = "i64"
+	format = "[]1i64"
 	argv = []string{"10.23456"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -190,31 +210,31 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println("Test", format, argv, "OK.")
 	}
 	// uint
-	// ui 10 -> OK
-	format = "ui"
+	// []1ui 10 -> OK
+	format = "[]1ui"
 	argv = []string{"10"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *ui 10 -> OK
-	format = "*ui"
+	// []1*ui 10 -> OK
+	format = "[]1*ui"
 	argv = []string{"10"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// ui 12.6 -> err0
+	// []1ui 12.6 -> err0
 	fmt.Println()
-	format = "ui"
+	format = "[]1ui"
 	argv = []string{"12.6"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -222,33 +242,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println(err)
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// ui8 100 -> OK
+	// []1ui8 100 -> OK
 	fmt.Println()
-	format = "ui8"
+	format = "[]1ui8"
 	argv = []string{"100"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *ui8 100 -> OK
+	// []1*ui8 100 -> OK
 	fmt.Println()
-	format = "*ui8"
+	format = "[]1*ui8"
 	argv = []string{"100"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// ui8 123.4 -> err0
+	// []1ui8 123.4 -> err0
 	fmt.Println()
-	format = "ui8"
+	format = "[]1ui8"
 	argv = []string{"123.4"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -256,33 +276,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println(err)
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// ui16 1024 -> OK
+	// []1ui16 1024 -> OK
 	fmt.Println()
-	format = "ui16"
+	format = "[]1ui16"
 	argv = []string{"1024"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *ui16 1024 -> OK
+	// []1*ui16 1024 -> OK
 	fmt.Println()
-	format = "*ui16"
+	format = "[]1*ui16"
 	argv = []string{"1024"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// ui16 0.10 -> err
+	// []1ui16 0.10 -> err
 	fmt.Println()
-	format = "ui16"
+	format = "[]1ui16"
 	argv = []string{"0.10"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -290,33 +310,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println(err)
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// ui32 17563 -> OK
+	// []1ui32 17563 -> OK
 	fmt.Println()
-	format = "ui32"
+	format = "[]1ui32"
 	argv = []string{"17563"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *ui32 17563 -> OK
+	// []1*ui32 17563 -> OK
 	fmt.Println()
-	format = "*ui32"
+	format = "[]1*ui32"
 	argv = []string{"17563"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// ui32 100.432 -> err
+	// []1ui32 100.432 -> err
 	fmt.Println()
-	format = "ui32"
+	format = "[]1ui32"
 	argv = []string{"100.432"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -324,33 +344,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println(err)
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// ui64 123456789 -> OK
+	// []1ui64 123456789 -> OK
 	fmt.Println()
-	format = "ui64"
+	format = "[]1ui64"
 	argv = []string{"123456789"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *ui64 123456789 -> OK
+	// []1*ui64 123456789 -> OK
 	fmt.Println()
-	format = "*ui64"
+	format = "[]1*ui64"
 	argv = []string{"123456789"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// ui64 10.23456 -> err
+	// []1ui64 10.23456 -> err
 	fmt.Println()
-	format = "ui64"
+	format = "[]1ui64"
 	argv = []string{"10.23456"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -359,33 +379,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println("Test", format, argv, "OK.")
 	}
 	// rune
-	// r 12456 -> OK
+	// []1r 12456 -> OK
 	fmt.Println()
-	format = "r"
+	format = "[]1r"
 	argv = []string{"12456"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *r 12456 -> OK
+	// []1*r 12456 -> OK
 	fmt.Println()
-	format = "*r"
+	format = "[]1*r"
 	argv = []string{"12456"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// r 10.23456 -> err
+	// []1r 10.23456 -> err
 	fmt.Println()
-	format = "r"
+	format = "[]1r"
 	argv = []string{"10.23456"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -394,33 +414,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println("Test", format, argv, "OK.")
 	}
 	// byte
-	// by 124 -> OK
+	// []1by 124 -> OK
 	fmt.Println()
-	format = "by"
+	format = "[]1by"
 	argv = []string{"124"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *by 124 -> OK
+	// []1*by 124 -> OK
 	fmt.Println()
-	format = "*by"
+	format = "[]1*by"
 	argv = []string{"124"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// by 73.256 -> err
+	// []1by 73.256 -> err
 	fmt.Println()
-	format = "by"
+	format = "[]1by"
 	argv = []string{"73.256"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -429,33 +449,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println("Test", format, argv, "OK.")
 	}
 	// float
-	// f32 125.2908 -> OK
+	// []1f32 125.2908 -> OK
 	fmt.Println()
-	format = "f32"
+	format = "[]1f32"
 	argv = []string{"125.2908"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *f32 125.2908 -> OK
+	// []1*f32 125.2908 -> OK
 	fmt.Println()
-	format = "*f32"
+	format = "[]1*f32"
 	argv = []string{"125.2908"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// f32 73.256d -> err
+	// []1f32 73.256d -> err
 	fmt.Println()
-	format = "f32"
+	format = "[]1f32"
 	argv = []string{"73.256d"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -463,33 +483,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println(err)
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// f64 12596.290822 -> OK
+	// []1f64 12596.290822 -> OK
 	fmt.Println()
-	format = "f64"
+	format = "[]1f64"
 	argv = []string{"12596.290822"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *f64 12596.290822 -> OK
+	// []1*f64 12596.290822 -> OK
 	fmt.Println()
-	format = "*f64"
+	format = "[]1*f64"
 	argv = []string{"12596.290822"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// f64 73.256d -> err
+	// []1f64 73.256d -> err
 	fmt.Println()
-	format = "f64"
+	format = "[]1f64"
 	argv = []string{"73.256d"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -498,33 +518,33 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println("Test", format, argv, "OK.")
 	}
 	// boolean
-	// b true -> OK
+	// []1b true -> OK
 	fmt.Println()
-	format = "b"
+	format = "[]1b"
 	argv = []string{"true"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *b true -> OK
+	// []1*b true -> OK
 	fmt.Println()
-	format = "*b"
+	format = "[]1*b"
 	argv = []string{"true"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// b false -> OK
+	// []1b false -> OK
 	fmt.Println()
-	format = "b"
+	format = "[]1b"
 	argv = []string{"false"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -532,22 +552,22 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println("Test", format, argv, "OK.")
 	}
 	// string
-	// s false -> OK
+	// []1s false -> OK
 	fmt.Println()
-	format = "s"
+	format = "[]1s"
 	argv = []string{"salutare"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *s false -> OK
+	// []1*s false -> OK
 	fmt.Println()
-	format = "*s"
+	format = "[]1*s"
 	argv = []string{"salutare"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -555,72 +575,88 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println("Test", format, argv, "OK.")
 	}
 	// complex
-	// c64 10.23 15.222 -> OK
+	// []1c64 10.23 15.222 -> OK
 	fmt.Println()
-	format = "c64"
+	format = "[]1c64"
 	argv = []string{"10.23", "15.222"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// *c64 10.23 15.222 -> OK
+	// []1*c64 10.23 15.222 -> OK
 	fmt.Println()
-	format = "*c64"
+	format = "[]1*c64"
 	argv = []string{"10.23", "15.222"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// c128 134.923 93.123 -> OK
-	format = "c128"
+	// []1c128 134.923 93.123 -> OK
+	fmt.Println()
+	format = "[]1c128"
 	argv = []string{"134.923", "93.123"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// c128 134.923s 93.123e -> err
-	format = "c128"
+	// []1*c128 134.923 93.123 -> OK
+	fmt.Println()
+	format = "[]1*c128"
+	argv = []string{"134.923", "93.123"}
+	err = testSliceParse(format, argv)
+	if err != "" {
+		fmt.Println("Format", format, " error:", err)
+		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
+	} else {
+		fmt.Println("Test", format, argv, "OK.")
+	}
+	// []1c128 134.923s 93.123e -> err
+	fmt.Println()
+	format = "[]1c128"
 	argv = []string{"134.923s", "93.123e"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// c128 134.923 93.123e -> err
-	format = "c128"
+	// []1c128 134.923 93.123e -> err
+	fmt.Println()
+	format = "[]1c128"
 	argv = []string{"134.923", "93.123e"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// iii32 10 20 30
-	format = "iii32"
-	argv = []string{"10", "20", "30"}
-	err = testParseArg01(format, argv)
+	// []2uiiii32 3 4 10 20 30
+	fmt.Println()
+	format = "[]2uiiii32"
+	argv = []string{"3", "4", "10", "20", "30"}
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i8i16f32 10 200 123.56
-	format = "i8i16f32"
+	// []3f32 10 200 123.56
+	fmt.Println()
+	format = "[]3f32"
 	argv = []string{"10", "200", "123.56"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -628,19 +664,21 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println("Test", format, argv, "OK.")
 	}
 	// i8sf64c128s 100 salut 3.14159 12.4 15.3 merge
+	fmt.Println()
 	format = "i8sf64c128s"
 	argv = []string{"100", "salut", "3.14159", "12.4", "15.3", "merge"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err != "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i8i64f 13 15 -> invalid format
-	format = "i8i64f32"
+	// []2f 13 15 -> invalid format
+	fmt.Println()
+	format = "[]2f32[]2i"
 	argv = []string{"13", "15"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
@@ -648,37 +686,16 @@ func TestParseArguments(t *testing.T) {
 		fmt.Println(err)
 		fmt.Println("Test", format, argv, "OK.")
 	}
-	// i8i64f 13 15 13.2 113 -> insuficient specifiers
-	format = "i8i64f32"
+	// []2i8f64 13 15 13.2 113 -> insuficient specifiers
+	fmt.Println()
+	format = "[]2i8f64"
 	argv = []string{"13", "15", "13.2", "113"}
-	err = testParseArg01(format, argv)
+	err = testSliceParse(format, argv)
 	if err == "" {
 		fmt.Println("Format", format, " error:", err)
 		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
 	} else {
 		fmt.Println(err)
-		fmt.Println("Test", format, argv, "OK.")
-	}
-	//////////////////////////////////////////////////////////////////
-	// unsized slice test.
-	fmt.Println("\n=== Unsized slice test ===")
-	// []ic128 134.923 93.123 -> ok
-	format = "[]ic128"
-	argv = []string{"134.923", "93.123e"}
-	err = testParseArg01(format, argv)
-	if err == "" {
-		fmt.Println("Format", format, " error:", err)
-		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
-	} else {
-		fmt.Println("Test", format, argv, "OK.")
-	}
-	format = "[]i[]ui8"
-	argv = []string{}
-	err = testParseArg01(format, argv)
-	if err == "" {
-		fmt.Println("Format", format, " error:", err)
-		t.Errorf("Invalid CheckFormat %s. Error: %s.", format, err)
-	} else {
 		fmt.Println("Test", format, argv, "OK.")
 	}
 }

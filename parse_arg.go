@@ -3,6 +3,7 @@ package main
 import (
 	"container/list"
 	"fmt"
+	"reflect"
 	"strconv"
 )
 
@@ -18,35 +19,56 @@ func (s Specifier) convertToInt(str string, ls *list.List) string {
 		if err != nil {
 			return "Error: " + err.Error()
 		}
-		ls.PushBack(int(result))
+		if s.pointerType == true {
+			v := int(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(int(result))
+		}
 	case 8:
 		result, err := strconv.ParseInt(str, 10, 8)
 		if err != nil {
 			return "Error: " + err.Error()
 		}
-		ls.PushBack(int8(result))
+		if s.pointerType == true {
+			v := int8(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(int8(result))
+		}
 	case 16:
 		result, err := strconv.ParseInt(str, 10, 16)
 		if err != nil {
 			return "Error: " + err.Error()
 		}
-		ls.PushBack(int16(result))
+		if s.pointerType == true {
+			v := int16(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(int16(result))
+		}
 	case 32:
 		result, err := strconv.ParseInt(str, 10, 32)
 		if err != nil {
 			return "Error: " + err.Error()
 		}
-		ls.PushBack(int32(result))
+		if s.pointerType == true {
+			v := int32(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(int32(result))
+		}
 	case 64:
 		result, err := strconv.ParseInt(str, 10, 64)
 		if err != nil {
 			return "Error: " + err.Error()
 		}
-		ls.PushBack(int64(result))
-		/*
-			default:
-				return "Unknown integer bit size: " + strconv.Itoa(s.bitSize)
-		*/
+		if s.pointerType == true {
+			v := int64(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(int64(result))
+		}
 	}
 	return ""
 }
@@ -59,35 +81,56 @@ func (s Specifier) convertToUInt(str string, ls *list.List) string {
 		if err != nil {
 			return "Error: " + err.Error()
 		}
-		ls.PushBack(uint(result))
+		if s.pointerType == true {
+			v := uint(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(uint(result))
+		}
 	case 8:
 		result, err := strconv.ParseUint(str, 10, 8)
 		if err != nil {
 			return "Error: " + err.Error()
 		}
-		ls.PushBack(uint8(result))
+		if s.pointerType == true {
+			v := uint8(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(uint8(result))
+		}
 	case 16:
 		result, err := strconv.ParseUint(str, 10, 16)
 		if err != nil {
 			return "Error: " + err.Error()
 		}
-		ls.PushBack(uint16(result))
+		if s.pointerType == true {
+			v := uint16(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(uint16(result))
+		}
 	case 32:
 		result, err := strconv.ParseUint(str, 10, 32)
 		if err != nil {
 			return "Error: " + err.Error()
 		}
-		ls.PushBack(uint32(result))
+		if s.pointerType == true {
+			v := uint32(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(uint32(result))
+		}
 	case 64:
 		result, err := strconv.ParseUint(str, 10, 64)
 		if err != nil {
 			return "Error: " + err.Error()
 		}
-		ls.PushBack(uint64(result))
-		/*
-			default:
-				return "Unknown integer bit size: " + strconv.Itoa(s.bitSize)
-		*/
+		if s.pointerType == true {
+			v := uint64(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(uint64(result))
+		}
 	}
 	return ""
 }
@@ -105,13 +148,23 @@ func (s Specifier) integerVar(str string, ls *list.List) string {
 		if err != nil {
 			return "Error converting string to rune (int32). Error: " + err.Error()
 		}
-		ls.PushBack(rune(result))
+		if s.pointerType == true {
+			v := rune(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(rune(result))
+		}
 	} else if s.theType == "by" { // byte, alias int8.
 		result, err := strconv.ParseUint(str, 10, 8)
 		if err != nil {
 			return "Error converting string to byte (int8). Error: " + err.Error()
 		}
-		ls.PushBack(byte(result))
+		if s.pointerType == true {
+			v := byte(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(byte(result))
+		}
 	}
 	return ""
 }
@@ -126,24 +179,41 @@ func (s Specifier) floatVar(str string, ls *list.List) string {
 		return "Error: " + err.Error()
 	}
 	if s.bitSize == 32 {
-		ls.PushBack(float32(result))
+		if s.pointerType == true {
+			v := float32(result)
+			ls.PushBack(&v)
+		} else {
+			ls.PushBack(float32(result))
+		}
+	} else {
+		if s.pointerType == true {
+			ls.PushBack(&result)
+		} else {
+			ls.PushBack(result)
+		}
+	}
+	return ""
+}
+
+func (s Specifier) booleanVar(str string, ls *list.List) string {
+	result := true
+	if str == "false" {
+		result = false
+	}
+	if s.pointerType == true {
+		ls.PushBack(&result)
 	} else {
 		ls.PushBack(result)
 	}
 	return ""
 }
 
-func (s Specifier) booleanVar(str string, ls *list.List) string {
-	if str == "true" {
-		ls.PushBack(true)
-	} else {
-		ls.PushBack(false)
-	}
-	return ""
-}
-
 func (s Specifier) stringVar(str string, ls *list.List) string {
-	ls.PushBack(str)
+	if s.pointerType == true {
+		ls.PushBack(&str)
+	} else {
+		ls.PushBack(str)
+	}
 	return ""
 }
 
@@ -185,11 +255,21 @@ func (s Specifier) convertComplex(str []string, ls *list.List) string {
 	}
 	// create variable.
 	if s.bitSize == 32 {
-		result := complex64(complex(re, im))
-		ls.PushBack(result)
+		if s.pointerType == true {
+			result := complex64(complex(re, im))
+			ls.PushBack(&result)
+		} else {
+			result := complex64(complex(re, im))
+			ls.PushBack(result)
+		}
 	} else {
-		result := complex128(complex(re, im))
-		ls.PushBack(result)
+		if s.pointerType == true {
+			result := complex128(complex(re, im))
+			ls.PushBack(&result)
+		} else {
+			result := complex128(complex(re, im))
+			ls.PushBack(result)
+		}
 	}
 	return ""
 }
@@ -215,8 +295,8 @@ func (s Specifier) convert(str []string, ai *int, ls *list.List) string {
 // @argv: the slice of arguments from the command line.
 // @return: the list of variables or the error string in case of error.
 func parseArguments(slist []Specifier, argv []string) (*list.List, string) {
-	fmt.Println("Parsing format:", slist)
-	fmt.Println("Parse arguments:", argv)
+	//fmt.Println("Parsing format:", slist)
+	//fmt.Println("Parse arguments:", argv)
 	varList := list.New() // the result.
 	si := 0               // specifier index.
 	ai := 0               // argument index.
@@ -231,7 +311,12 @@ func parseArguments(slist []Specifier, argv []string) (*list.List, string) {
 				return nil, err
 			}
 		} else if spec.sliceSize == 0 {
-			// unsized slice
+			fmt.Println("0 slice")
+			// unsized slice -> create an emplty slice.
+			slice := reflect.ValueOf(spec.createSlice().Front().Value)
+			fmt.Println(slice, varList)
+			spec.convertSlice(slice, varList)
+			fmt.Println(slice, varList)
 		} else {
 			// sized slice.
 			err := spec.convertSizedSlice(argv[:], &ai, varList)
@@ -241,12 +326,12 @@ func parseArguments(slist []Specifier, argv []string) (*list.List, string) {
 		}
 		si++
 	}
-	fmt.Println(si, ai, slen, alen)
-	if si != slen {
-		return nil, "The given format did not parsed all arguments!"
+	fmt.Println("(", si, slen, ") (", ai, alen, ")")
+	if ai != 0 && si != slen {
+		return nil, "The given format did not parsed all arguments."
 	}
 	if ai != alen {
-		return nil, "The format has insuficient specifiers"
+		return nil, "The format has insuficient specifiers."
 	}
 	return varList, ""
 }

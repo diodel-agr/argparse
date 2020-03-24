@@ -17,7 +17,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []ii[]f32 -> error */
-	fmt.Println()
 	format = "[]ii[]f32"
 	result, _, err = CheckFormat(format)
 	if result == true {
@@ -27,7 +26,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []10f32is */
-	fmt.Println()
 	format = "[]10f32is"
 	result, _, err = CheckFormat(format)
 	if result == false {
@@ -37,7 +35,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* *riis */
-	fmt.Println()
 	format = "*riis"
 	result, _, err = CheckFormat(format)
 	if result == false {
@@ -47,7 +44,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []10*ui32 */
-	fmt.Println()
 	format = "[]10*ui32"
 	result, _, err = CheckFormat(format)
 	if result == false {
@@ -57,7 +53,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []-19ui -> error. */
-	fmt.Println()
 	format = "[]-19ui"
 	result, _, err = CheckFormat(format)
 	if result == true {
@@ -69,7 +64,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []i[]f32 -> error. */
-	fmt.Println()
 	format = "[]i[]f32"
 	result, _, err = CheckFormat(format)
 	if result == true {
@@ -81,7 +75,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []ui32[]3c128 -> ok. */
-	fmt.Println()
 	format = "[]ui32[]3c128"
 	result, _, err = CheckFormat(format)
 	if result == false {
@@ -91,7 +84,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []b[]s */
-	fmt.Println()
 	format = "[]b[]s"
 	result, _, err = CheckFormat(format)
 	if result == true {
@@ -104,7 +96,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []ui8[]b -> ok. */
-	fmt.Println()
 	format = "[]ui8[]b"
 	result, _, err = CheckFormat(format)
 	if result == false {
@@ -114,7 +105,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []ii[]i -> error. */
-	fmt.Println()
 	format = "[]ii[]i"
 	result, _, err = CheckFormat(format)
 	if result == true {
@@ -127,7 +117,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []is[]i -> ok. */
-	fmt.Println()
 	format = "[]is[]i"
 	result, _, err = CheckFormat(format)
 	if result == false {
@@ -137,7 +126,6 @@ func TestCheckFormat(t *testing.T) {
 		fmt.Println("Test " + format + " OK.")
 	}
 	/* []i[]f[]c64 -> eror. */
-	fmt.Println()
 	format = "[]i[]f32[]c64"
 	result, _, err = CheckFormat(format)
 	if result == true {

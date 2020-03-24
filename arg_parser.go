@@ -120,23 +120,19 @@ func ParseArgList() *list.List {
 	if len(argv) == 0 {
 		fmt.Println("No command line arguments.")
 		return nil
-	} else if len(argv) == 1 { // TO DO: read from file.
-		fmt.Println("Reading arguments from a file not yet implemented!")
-		return nil
-	} else {
-		format := argv[0]
-		result, slist, err := CheckFormat(format)
-		if result == false {
-			fmt.Println("Invalid format:", err)
-			return nil
-		}
-		// parse the command line arguments.
-		fmt.Println("Parsing ", slist, ":", os.Args[2:])
-		varList, err := parseArguments(*slist, os.Args[2:])
-		if err != "" {
-			fmt.Println("Error reading arguments:", err)
-			return nil
-		}
-		return varList // this is the list containing all the variables from the command line.
 	}
+	format := argv[0]
+	result, slist, err := CheckFormat(format)
+	if result == false {
+		fmt.Println("Invalid format:", err)
+		return nil
+	}
+	// parse the command line arguments.
+	fmt.Println("Parsing ", slist, ":", os.Args[2:])
+	varList, err := parseArguments(*slist, os.Args[2:])
+	if err != "" {
+		fmt.Println("Error reading arguments:", err)
+		return nil
+	}
+	return varList // this is the list containing all the variables from the command line.
 }
