@@ -302,16 +302,18 @@ func parseArguments(slist []Specifier, argv []string) (*list.List, string) {
 	ai := 0               // argument index.
 	slen := len(slist)    // specifier list length.
 	alen := len(argv)     // argument list length.
-	for si < slen && ai < alen {
+	for si < slen {
 		spec := slist[si] // current specifier.
 		if spec.slice == false {
 			// simple variable.
+			if ai >= alen {
+				break
+			}
 			err := spec.convert(argv[:], &ai, varList)
 			if err != "" {
 				return nil, err
 			}
 		} else if spec.sliceSize == 0 {
-			fmt.Println("0 slice")
 			// unsized slice -> create an emplty slice.
 			slice := reflect.ValueOf(spec.createSlice().Front().Value)
 			fmt.Println(slice, varList)
@@ -319,6 +321,9 @@ func parseArguments(slist []Specifier, argv []string) (*list.List, string) {
 			fmt.Println(slice, varList)
 		} else {
 			// sized slice.
+			if ai >= alen {
+				break
+			}
 			err := spec.convertSizedSlice(argv[:], &ai, varList)
 			if err != "" {
 				return nil, err
@@ -327,7 +332,7 @@ func parseArguments(slist []Specifier, argv []string) (*list.List, string) {
 		si++
 	}
 	fmt.Println("(", si, slen, ") (", ai, alen, ")")
-	if ai != 0 && si != slen {
+	if si != slen {
 		return nil, "The given format did not parsed all arguments."
 	}
 	if ai != alen {
