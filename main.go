@@ -1,6 +1,7 @@
 package main
 
 import (
+	"argparse"
 	"fmt"
 	"reflect"
 )
@@ -10,7 +11,7 @@ import (
 // c
 // b, s
 func main() {
-	listOfVariables := ParseArgList()
+	listOfVariables := argparse.ParseArgList()
 	if listOfVariables != nil {
 		fmt.Println("The result: ")
 		i := 0
@@ -21,5 +22,4 @@ func main() {
 	}
 }
 
-/* change the codition at the ParseArgList for loop */
-/* BUG: ./argparse []i has 0 values so the loop does not execute to insert the emplty slice. */
+// ./argparse []3i[]4s[]2f32 10 20 30 salut ce mai faci 3.14259 2.71

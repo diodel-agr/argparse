@@ -128,10 +128,9 @@ func ParseArgList() *list.List {
 		return nil
 	}
 	// parse the command line arguments.
-	fmt.Println("Parsing ", slist, ":", os.Args[2:])
 	varList, err := parseArguments(*slist, os.Args[2:])
 	if err != "" {
-		fmt.Println("Error reading arguments:", err)
+		fmt.Println(err)
 		return nil
 	}
 	return varList // this is the list containing all the variables from the command line.
