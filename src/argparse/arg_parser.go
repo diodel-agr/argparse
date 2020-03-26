@@ -135,3 +135,15 @@ func ParseArgList() *list.List {
 	}
 	return varList // this is the list containing all the variables from the command line.
 }
+
+// GetVariableAt - function used to obtain the variable at index @i from the @l list.
+func GetVariableAt(l *list.List, i int) interface{} {
+	e := l.Front()
+	for j := 0; j < i && e != nil; j++ {
+		e = e.Next()
+	}
+	if e == nil {
+		return nil
+	}
+	return e.Value
+}

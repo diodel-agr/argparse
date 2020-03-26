@@ -14,10 +14,9 @@ func main() {
 	listOfVariables := argparse.ParseArgList()
 	if listOfVariables != nil {
 		fmt.Println("The result: ")
-		i := 0
-		for e := listOfVariables.Front(); e != nil; e = e.Next() {
-			fmt.Println(i, ": ", e.Value, "(", reflect.TypeOf(e.Value), ")")
-			i++
+		for i := 0; i < listOfVariables.Len(); i++ {
+			el := argparse.GetVariableAt(listOfVariables, i)
+			fmt.Println(i, ": ", el, "(", reflect.TypeOf(el), ")")
 		}
 	}
 }

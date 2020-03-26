@@ -331,7 +331,6 @@ func parseArguments(slist []Specifier, argv []string) (*list.List, string) {
 		}
 		si++
 	}
-	fmt.Println("(", si, slen, ") (", ai, alen, ")")
 	if si != slen {
 		return nil, "The given format did not parsed all arguments."
 	}
